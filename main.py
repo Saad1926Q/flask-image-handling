@@ -30,12 +30,15 @@ def upload():
         # empty file without a filename.
         if file.filename == '':
             flash('No selected file')
-            return render_template("index.html")
+            return redirect(url_for('home'))
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             # return redirect(url_for('download_file', name=filename))
             return render_template("index.html") 
+        elif file and not allowed_file(file.filename):
+            flash('Incorrect Format')
+            return render_template("index.html")
 
 
 app.run(debug=True)
