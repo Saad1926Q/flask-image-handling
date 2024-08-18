@@ -2,6 +2,8 @@ from flask import Flask,render_template,request,flash, request, redirect, url_fo
 from werkzeug.utils import secure_filename
 import os
 
+from models import Model
+
 UPLOAD_FOLDER = 'static'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
@@ -9,6 +11,8 @@ app=Flask(__name__)
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['SECRET_KEY']='3d6f45a5fc12445dbac2f59c3b6c7cb1'
+
+model=Model()
 
 def allowed_file(filename):
     return '.' in filename and \
@@ -33,8 +37,12 @@ def upload():
             return redirect(url_for('home'))
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            file_path=os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            file.save(file_path)
             # return redirect(url_for('download_file', name=filename))
+            model.image_to_feature_vector(image_path=file_path)
+            pred=model.image_prediction(image=model.image)
+            flash(pred)
             return render_template("index.html") 
         elif file and not allowed_file(file.filename):
             flash('Incorrect Format')
