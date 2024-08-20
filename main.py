@@ -7,7 +7,7 @@ from models import Model
 UPLOAD_FOLDER = 'static'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
-app=Flask(__name__)
+app=Flask(__name__,template_folder='.')
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['SECRET_KEY']='3d6f45a5fc12445dbac2f59c3b6c7cb1'
