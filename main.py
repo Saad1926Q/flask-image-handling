@@ -22,13 +22,18 @@ def allowed_file(filename):
 def home():
     return render_template("index.html")
 
+@app.route('/result')
+def result():
+    prediction = request.args.get('prediction')
+    return f'Result: {prediction}'
+
 @app.route('/upload',methods=["GET","POST"])
 def upload():
     if request.method=="POST":
         # check if the post request has the file part
         if 'file' not in request.files:
             flash('No file part')
-            return render_template("index.html")
+            return redirect(url_for('home'))
         file = request.files['file']
         # If the user does not select a file, the browser submits an
         # empty file without a filename.
@@ -43,10 +48,10 @@ def upload():
             model.image_to_feature_vector(image_path=file_path)
             pred=model.image_prediction(image=model.image)
             flash(pred)
-            return render_template("index.html") 
+            return redirect(url_for('result',prediction=pred)) 
         elif file and not allowed_file(file.filename):
             flash('Incorrect Format')
-            return render_template("index.html")
+            return redirect(url_for('home'))
 
 
 app.run(debug=True)

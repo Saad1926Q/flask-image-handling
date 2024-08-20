@@ -49,11 +49,11 @@
             <h2>Test Your Water</h2>
             <p>Upload an image of your water sample and get immediate results on its quality.</p>
             <img src="{{ url_for('static', filename='test.gif') }}" alt="Water Sample" class="test-water-image"> <!-- Placeholder for image -->
-            <form action="#" method="POST" enctype="multipart/form-data">
+            <form action="/upload" method="POST" enctype="multipart/form-data">
                 <label for="waterImage" class="custom-file-upload">
                     Choose File
                 </label>
-                <input type="file" name="waterImage" id="waterImage" accept="image/*" required>
+                <input type="file" name="file" id="waterImage" accept="image/*" required>
                 <button type="submit">Upload & Test</button>
             </form>
         </div>
