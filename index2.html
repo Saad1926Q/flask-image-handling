@@ -191,9 +191,9 @@
             alert.classList.add("hidden")
         },3000)
         alert.classList.remove("hidden")
-        if (pred == 1) {
+        if (pred == 0) {
                 waterImage.src = "{{ url_for('static', filename='drop.gif') }}"; 
-            } else if (pred == 0) {
+            } else if (pred == 1) {
                 waterImage.src = "{{ url_for('static', filename='pollution.gif') }}";
         }
     }
