@@ -3,7 +3,7 @@ import cv2
 
 class Model():
     def __init__(self):
-        self.model=tf.keras.models.load_model(r'C:\Users\ASUS USER\xylem-pristine-website\water_pred_03.h5')
+        self.model=tf.keras.models.load_model(r'/home/saad-ahmed-siddiqui/xylem-pristine-website/water_pred_03.h5')
 
     def image_to_feature_vector(self,image_path, size=(128, 128)):
       # Load the image using OpenCV
