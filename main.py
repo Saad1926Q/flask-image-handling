@@ -39,6 +39,9 @@ def home():
 
 @app.route('/upload',methods=["GET","POST"])
 def upload():
+    if not session.get('logged_in'):  
+        flash('You must be logged in to upload files.')
+        return redirect(url_for('home'))
     if request.method=="POST":
         if 'file' not in request.files:
             return redirect(url_for('home'))
