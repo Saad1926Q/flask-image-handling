@@ -6,6 +6,8 @@ import os
 import jwt
 from models import Model
 from werkzeug.utils import secure_filename
+import cv2
+import numpy as np
 
 UPLOAD_FOLDER = 'static'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
@@ -56,10 +58,12 @@ def upload():
         if file.filename == '':
             return redirect(url_for('home'))
         if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            file_path=os.path.join(app.config['UPLOAD_FOLDER'], filename)
-            file.save(file_path)
-            model.image_to_feature_vector(image_path=file_path)
+            # filename = secure_filename(file.filename)
+            # file_path=os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            # file.save(file_path)
+            file_bytes = np.frombuffer(file.read(), np.uint8)
+            image = cv2.imdecode(file_bytes, cv2.IMREAD_COLOR)
+            model.image_to_feature_vector(image_get=image)
             pred=model.image_prediction(image=model.image)
             return redirect(url_for('home',data=pred))
         elif file and not allowed_file(file.filename):
@@ -111,4 +115,4 @@ def logout():
 
 
 
-app.run(debug=True)
+app.run(debug=False)
