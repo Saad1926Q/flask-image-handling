@@ -8,6 +8,7 @@ from models import Model
 from werkzeug.utils import secure_filename
 import cv2
 import numpy as np
+import logging
 
 UPLOAD_FOLDER = 'static'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
@@ -48,26 +49,36 @@ def home():
 
 @app.route('/upload',methods=["GET","POST"])
 def upload():
-    # if not session.get('logged_in'):  
-    #     flash('You must be logged in to upload files.')
-    #     return redirect(url_for('home'))
-    if request.method=="POST":
-        if 'file' not in request.files:
+    try:
+        if not session.get('logged_in'):  
+            flash('You must be logged in to upload files.')
             return redirect(url_for('home'))
-        file = request.files['file']
-        if file.filename == '':
-            return redirect(url_for('home'))
-        if file and allowed_file(file.filename):
-            # filename = secure_filename(file.filename)
-            # file_path=os.path.join(app.config['UPLOAD_FOLDER'], filename)
-            # file.save(file_path)
-            file_bytes = np.frombuffer(file.read(), np.uint8)
-            image = cv2.imdecode(file_bytes, cv2.IMREAD_COLOR)
-            model.image_to_feature_vector(image_get=image)
-            pred=model.image_prediction(image=model.image)
-            return redirect(url_for('home',data=pred))
-        elif file and not allowed_file(file.filename):
-            return redirect(url_for('home'))
+        if request.method=="POST":
+            if 'file' not in request.files:
+                return redirect(url_for('home'))
+            file = request.files['file']
+            if file.filename == '':
+                return redirect(url_for('home'))
+            if file and allowed_file(file.filename):
+                # filename = secure_filename(file.filename)
+                # file_path=os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                # file.save(file_path)
+                try:
+                    file_bytes = np.frombuffer(file.read(), np.uint8)
+                    image = cv2.imdecode(file_bytes, cv2.IMREAD_COLOR)
+                    model.image_to_feature_vector(image_get=image)
+                    pred=model.image_prediction(image=model.image)
+                    return redirect(url_for('home',data=pred))
+                except Exception as e:
+                        logging.error(f"Error processing file: {e}")
+                        flash('Error processing file.')
+                        return redirect(url_for('home'))
+            elif file and not allowed_file(file.filename):
+                return redirect(url_for('home'))
+    except Exception as e:
+        logging.error(f"Unexpected error: {e}")
+        flash('An unexpected error occurred.')
+        return redirect(url_for('home'))
 
 @app.route('/signup', methods=['POST'])
 def signup():
