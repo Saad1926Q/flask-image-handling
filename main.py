@@ -9,11 +9,13 @@ from werkzeug.utils import secure_filename
 import cv2
 import numpy as np
 import logging
+from flask_cors import CORS
 
 UPLOAD_FOLDER = 'static'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
 app=Flask(__name__,template_folder='.')
+CORS(app) 
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['SECRET_KEY']='3d6f45a5fc12445dbac2f59c3b6c7cb1'
@@ -41,44 +43,44 @@ def allowed_file(filename):
 
 @app.route("/")
 def home():
-    prediction = request.args.get('data', -1)
+    # prediction = request.args.get('data', -1)
     is_logged_in = session.get('logged_in', False)
     user = session.get('email', '')
-    return render_template("index2.html", data=prediction, is_logged_in=is_logged_in, user=user)
+    return render_template("index2.html",is_logged_in=is_logged_in, user=user)
 
 
-@app.route('/upload',methods=["GET","POST"])
-def upload():
-    try:
-        # if not session.get('logged_in'):  
-        #     flash('You must be logged in to upload files.')
-        #     return redirect(url_for('home'))
-        if request.method=="POST":
-            if 'file' not in request.files:
-                return redirect(url_for('home'))
-            file = request.files['file']
-            if file.filename == '':
-                return redirect(url_for('home'))
-            if file and allowed_file(file.filename):
-                # filename = secure_filename(file.filename)
-                # file_path=os.path.join(app.config['UPLOAD_FOLDER'], filename)
-                # file.save(file_path)
-                try:
-                    file_bytes = np.frombuffer(file.read(), np.uint8)
-                    image = cv2.imdecode(file_bytes, cv2.IMREAD_COLOR)
-                    model.image_to_feature_vector(image_get=image)
-                    pred=model.image_prediction(image=model.image)
-                    return redirect(url_for('home',data=pred))
-                except Exception as e:
-                        logging.error(f"Error processing file: {e}")
-                        flash('Error processing file.')
-                        return redirect(url_for('home'))
-            elif file and not allowed_file(file.filename):
-                return redirect(url_for('home'))
-    except Exception as e:
-        logging.error(f"Unexpected error: {e}")
-        flash('An unexpected error occurred.')
-        return redirect(url_for('home'))
+# @app.route('/upload',methods=["GET","POST"])
+# def upload():
+#     try:
+#         # if not session.get('logged_in'):  
+#         #     flash('You must be logged in to upload files.')
+#         #     return redirect(url_for('home'))
+#         if request.method=="POST":
+#             if 'file' not in request.files:
+#                 return redirect(url_for('home'))
+#             file = request.files['file']
+#             if file.filename == '':
+#                 return redirect(url_for('home'))
+#             if file and allowed_file(file.filename):
+#                 # filename = secure_filename(file.filename)
+#                 # file_path=os.path.join(app.config['UPLOAD_FOLDER'], filename)
+#                 # file.save(file_path)
+#                 try:
+#                     file_bytes = np.frombuffer(file.read(), np.uint8)
+#                     image = cv2.imdecode(file_bytes, cv2.IMREAD_COLOR)
+#                     model.image_to_feature_vector(image_get=image)
+#                     pred=model.image_prediction(image=model.image)
+#                     return redirect(url_for('home',data=pred))
+#                 except Exception as e:
+#                         logging.error(f"Error processing file: {e}")
+#                         flash('Error processing file.')
+#                         return redirect(url_for('home'))
+#             elif file and not allowed_file(file.filename):
+#                 return redirect(url_for('home'))
+#     except Exception as e:
+#         logging.error(f"Unexpected error: {e}")
+#         flash('An unexpected error occurred.')
+#         return redirect(url_for('home'))
 
 @app.route('/signup', methods=['POST'])
 def signup():
