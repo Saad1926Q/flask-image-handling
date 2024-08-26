@@ -310,7 +310,7 @@ document.getElementById('uploadForm').addEventListener('submit', async function(
         const waterImage = document.querySelector('.test-water-image');
         waterImage.src = "{{ url_for('static', filename='load.gif') }}";
         
-        const response = await fetch('https://pristine-ml.onrender.com/upload', {
+        const response = await fetch('https://pristine-image-process.onrender.com/upload', {
             method: 'POST',
             body: formData
         });
