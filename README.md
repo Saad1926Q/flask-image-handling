@@ -28,6 +28,12 @@ Pristine Water Analysis is a web application designed to provide real-time water
 - Flask
 - Required Python packages
 
+### UI
+-Figma
+-Javascript
+-HTML
+-CSS
+-Bootstrap
 
 ## Usage
 
