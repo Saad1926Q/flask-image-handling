@@ -20,12 +20,6 @@ app.config['SECRET_KEY']='3d6f45a5fc12445dbac2f59c3b6c7cb1'
 
 model=Model()
 
-# db = mysql.connector.connect(
-#     host="localhost",
-#     user="root",
-#     password="xylempristine",
-#     database="sign_up"
-# )
 db = mysql.connector.connect(
     host=os.getenv('DB_HOST'),
     user=os.getenv('DB_USER'),
