@@ -9,13 +9,12 @@ from werkzeug.utils import secure_filename
 import cv2
 import numpy as np
 import logging
-from flask_cors import CORS
 
 UPLOAD_FOLDER = 'static'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
 app=Flask(__name__,template_folder='.')
-CORS(app) 
+
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['SECRET_KEY']='3d6f45a5fc12445dbac2f59c3b6c7cb1'
