@@ -15,7 +15,7 @@ Pristine Water Analysis is a web application designed to provide real-time water
 
 - **Backend:** Flask
 - **Frontend:** HTML, CSS, JavaScript, Bootstrap
-- **Machine Learning:** OpenCV, NumPy
+- **Machine Learning:** OpenCV, NumPy, MatPlotLib
 - **Database:** MySQL
 - **Environment:** Python
 
